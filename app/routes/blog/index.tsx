@@ -24,7 +24,7 @@ export default function Blog() {
 	const blogs = useLoaderData<QueryDatabaseResponseResults>();
 
 	return (
-		<main className="container mx-auto lg:max-w-3xl prose md:prose-lg lg:prose-xl">
+		<>
 			<h1>Blogs</h1>
 			<ul>
 				{blogs.map((blog) => (
@@ -44,6 +44,6 @@ export default function Blog() {
 					</li>
 				))}
 			</ul>
-		</main>
+		</>
 	);
 }

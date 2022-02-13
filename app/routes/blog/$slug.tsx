@@ -58,7 +58,7 @@ export const loader: LoaderFunction = async ({
 export default function BlogPost() {
 	const { page, blocks } = useLoaderData<BlogContentResponse>();
 	return (
-		<main className="container mx-auto lg:max-w-3xl prose md:prose-lg lg:prose-xl">
+		<>
 			<h1>
 				<Text
 					text={
@@ -76,6 +76,6 @@ export default function BlogPost() {
 					<Block key={block.id} block={block} />
 				))}
 			</article>
-		</main>
+		</>
 	);
 }

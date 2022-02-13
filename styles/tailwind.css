@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url('/fonts/GTWalshiemPro/GTWalsheimPro-Regular.woff2') format('woff2'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Regular.woff') format('woff'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url('/fonts/GTWalshiemPro/GTWalsheimPro-Bold.woff2') format('woff2'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Bold.woff') format('woff'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'GT Walsheim Pro';
+    src: url('/fonts/GTWalshiemPro/GTWalsheimPro-Medium.woff2') format('woff2'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Medium.woff') format('woff'),
+        url('/fonts/GTWalshiemPro/GTWalsheimPro-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+  }
+}
