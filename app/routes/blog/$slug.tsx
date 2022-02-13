@@ -56,10 +56,15 @@ export const loader: LoaderFunction = async ({
 };
 
 export default function BlogPost() {
-	const { page, blocks } = useLoaderData<BlogContentResponse>();
+	const data = useLoaderData<BlogContentResponse | undefined>();
+
+	if (!data) return <></>
+
+	const { page, blocks } = data
+
 	return (
 		<>
-			<h1>
+			<h1 className="animate__animated animate__fadeInUp">
 				<Text
 					text={
 						(

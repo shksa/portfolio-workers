@@ -6,6 +6,10 @@ module.exports = {
     extend: {
       fontFamily: {
         gtWalshiemPro: ["'GT Walsheim Pro'", ...defualtTheme.fontFamily.sans]
+      },
+      animation: {
+        'fade-in': 'animate-fade-in',
+        'faster': 'animate-faster'
       }
     },
   },

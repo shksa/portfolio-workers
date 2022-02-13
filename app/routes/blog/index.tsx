@@ -21,11 +21,13 @@ export const loader: LoaderFunction =
 	};
 
 export default function Blog() {
-	const blogs = useLoaderData<QueryDatabaseResponseResults>();
+	const blogs = useLoaderData<QueryDatabaseResponseResults | undefined>();
+
+	if (!blogs) return <></>
 
 	return (
 		<>
-			<h1>Blogs</h1>
+			<h1 className="animate__animated animate__fadeInUp">Blogs</h1>
 			<ul>
 				{blogs.map((blog) => (
 					<li key={blog.id}>
