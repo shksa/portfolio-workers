@@ -112,7 +112,7 @@ export const Block = ({ block }: { block: BlockObjectResponse }) => {
 	}
 
 	return (
-		<div data-block-id={id}>
+		<div data-block-id={id} className="ml-8">
 			{blockContent}
 			{/* @ts-ignore */}
 			{block[type].children?.map((childBlock) => (

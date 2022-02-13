@@ -50,7 +50,7 @@ export default function App() {
 			</head>
 			<body className="px-4 container mx-auto lg:max-w-3xl">
 				<Header />
-				<main className="mt-8 sm:mt-20 prose md:prose-lg">
+				<main className="prose md:prose-lg">
 					<Outlet />
 				</main>
 				<ScrollRestoration />
