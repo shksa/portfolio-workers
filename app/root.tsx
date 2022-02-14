@@ -31,28 +31,28 @@ export const links: LinksFunction = () => {
 		{
 			rel: "icon",
 			type: "image/x-icon",
-			href: "/favicon.ico"
+			href: "/favicon.ico",
 		},
 		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Regular.woff2",
 			as: "font",
 			type: "font/woff2",
-			crossOrigin: "anonymous"
+			crossOrigin: "anonymous",
 		},
 		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Bold.woff2",
 			as: "font",
 			type: "font/woff2",
-			crossOrigin: "anonymous"
+			crossOrigin: "anonymous",
 		},
 		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Medium.woff2",
 			as: "font",
 			type: "font/woff2",
-			crossOrigin: "anonymous"
+			crossOrigin: "anonymous",
 		},
 	];
 };
@@ -76,12 +76,16 @@ function getFadeDirections(
 	) {
 		// happy path
 		return {
+			enter: "overflow-hidden",
 			enterActive: "animate__fadeInRight",
+			enterDone: "overflow-scroll",
 			exitActive: "animate__fadeOutLeft",
 		};
 	}
 	return {
+		enter: "overflow-hidden",
 		enterActive: "animate__fadeInLeft",
+		enterDone: "overflow-scroll",
 		exitActive: "animate__fadeOutRight",
 	};
 }
@@ -109,8 +113,13 @@ export default function App() {
 						}
 						classNames={getFadeDirections(currentLocation, previousLocation)}
 					>
-						<main className="prose md:prose-lg animate__animated animate__faster overflow-x-scroll">
-							{outlet}
+						{/* The parent of animate__animated should have overflow-hidden while the animation 
+							is in progress to aboid seeing the scrollbars. Hence the use extra parent element.
+						*/}
+						<main className="prose md:prose-lg"> 
+							<div className="animate__animated animate__faster">
+								{outlet}
+							</div>
 						</main>
 					</CSSTransition>
 				</SwitchTransition>
