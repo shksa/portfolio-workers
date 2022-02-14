@@ -74,13 +74,11 @@ export default function BlogPost() {
 					/>
 				)}
 			</h1>
-			{data?.blocks && (
-				<article>
-					{data.blocks.map((block) => (
-						<Block key={block.id} block={block} />
-					))}
-				</article>
-			)}
+			<article>
+				{data?.blocks.map((block) => (
+					<Block key={block.id} block={block} />
+				))}
+			</article>
 		</>
 	);
 }
