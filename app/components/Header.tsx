@@ -22,7 +22,9 @@ const Link = ({ text, to }: { text: string; to: string }) => {
 export const Header = () => {
 	return (
 		<>
-			<header className="py-3 md:py-5 fixed top-0 left-0 w-full bg-white/40 backdrop-blur-md shadow-lg shadow-grey-500/50">
+			<header
+				className="py-3 md:py-5 fixed-mobile-compat top-0 left-0 z-10 w-full bg-white/40 backdrop-blur-md backdrop-saturate-150 shadow-lg shadow-grey-500/50"
+			>
 				<nav className="px-4 container mx-auto lg:max-w-3xl text-lg font-bold text-black">
 					<ol className="space-x-6 sm:space-x-8 md:space-x-12 lg:space-x-16 flex items-center">
 						<NavLink to="/" className="h-12 w-12">
@@ -44,7 +46,7 @@ export const Header = () => {
 					</ol>
 				</nav>
 			</header>
-			<div className="h-[72px] md:h-[88px] mt-8 sm:mt-20"></div>
+			<div className="h-[72px] md:h-[88px] mb-8 sm:mb-20"></div>
 		</>
 	);
 };

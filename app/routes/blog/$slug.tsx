@@ -58,29 +58,29 @@ export const loader: LoaderFunction = async ({
 export default function BlogPost() {
 	const data = useLoaderData<BlogContentResponse | undefined>();
 
-	if (!data) return <></>
-
-	const { page, blocks } = data
-
 	return (
 		<>
 			<h1 className="animate__animated animate__fadeInUp">
-				<Text
-					text={
-						(
-							page.properties.Name as Extract<
-								typeof page.properties.Name,
-								{ type: "title" }
-							>
-						).title
-					}
-				/>
+				{data?.page && (
+					<Text
+						text={
+							(
+								data.page.properties.Name as Extract<
+									typeof data.page.properties.Name,
+									{ type: "title" }
+								>
+							).title
+						}
+					/>
+				)}
 			</h1>
-			<article>
-				{blocks.map((block) => (
-					<Block key={block.id} block={block} />
-				))}
-			</article>
+			{data?.blocks && (
+				<article>
+					{data.blocks.map((block) => (
+						<Block key={block.id} block={block} />
+					))}
+				</article>
+			)}
 		</>
 	);
 }

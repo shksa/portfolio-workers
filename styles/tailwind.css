@@ -30,3 +30,12 @@
     font-style: normal;
   }
 }
+
+@layer utilities {
+  .fixed-mobile-compat {
+    @apply fixed;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+
