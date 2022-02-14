@@ -109,7 +109,7 @@ export default function App() {
 						}
 						classNames={getFadeDirections(currentLocation, previousLocation)}
 					>
-						<main className="prose md:prose-lg animate__animated animate__faster">
+						<main className="prose md:prose-lg animate__animated animate__faster overflow-x-scroll">
 							{outlet}
 						</main>
 					</CSSTransition>
