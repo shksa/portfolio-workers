@@ -5,8 +5,11 @@ import {
 	Meta,
 	Scripts,
 	ScrollRestoration,
+	useCatch,
 	useLocation,
 	useOutlet,
+	ErrorBoundaryComponent,
+
 } from "remix";
 import type { MetaFunction } from "remix";
 import tailwindStyles from "./tailwind.css";
@@ -16,6 +19,7 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { Location } from "history";
 import { usePrevious } from "./lib/hooks";
 import { CSSTransitionClassNames } from "react-transition-group/CSSTransition";
+import { ReactNode } from "react";
 
 export const meta: MetaFunction = () => {
 	return { title: "Sreekar Nimbalkar" };
@@ -88,9 +92,17 @@ function getFadeDirections(
 
 export default function App() {
 	const outlet = useOutlet();
-	const currentLocation = useLocation();
-	const previousLocation = usePrevious(currentLocation);
 
+	return (
+		<Document>
+			<Layout>
+				{outlet}
+			</Layout>
+		</Document>
+	);
+}
+
+const Document = ({ children }: { children: ReactNode }) => {
 	return (
 		<html lang="en" className="font-gtWalshiemPro antialiased">
 			<head>
@@ -99,28 +111,83 @@ export default function App() {
 				<Meta />
 				<Links />
 			</head>
-			<body className="px-4 container mx-auto lg:max-w-3xl">
-				<Header />
-				{/* overflow-hidden on body does not prevent scrollbars, it has to be a new element here, hence the main element */}
-				<main className="overflow-hidden">
-					<SwitchTransition>
-						<CSSTransition
-							key={currentLocation.pathname}
-							addEndListener={(node, done) => {
-								node.addEventListener("animationend", done, false);
-							}}
-							classNames={getFadeDirections(currentLocation, previousLocation)}
-						>
-							<section className="prose md:prose-lg overflow-x-hidden break-words">
-								{outlet}
-							</section>
-						</CSSTransition>
-					</SwitchTransition>
-				</main>
+			<body className="px-4 container mx-auto lg:max-w-3xl min-h-screen">
+				{children}
 				<ScrollRestoration />
 				<Scripts />
 				{process.env.NODE_ENV === "development" && <LiveReload />}
 			</body>
 		</html>
+	);
+};
+
+const Layout = ({ children }: { children: ReactNode }) => {
+	const currentLocation = useLocation();
+	const previousLocation = usePrevious(currentLocation);
+	return (
+		<>
+			<Header />
+			{/* overflow-hidden on body does not prevent scrollbars, it has to be a new element here, hence the main element */}
+			{/* NOTE: Find out what happning here as overflow-hidden is also supposed to work on Y-axis */}
+			<main className="overflow-hidden prose md:prose-lg break-words">
+				<SwitchTransition>
+					<CSSTransition
+						key={currentLocation.pathname}
+						addEndListener={(node, done) => {
+							node.addEventListener("animationend", done, false);
+						}}
+						classNames={getFadeDirections(currentLocation, previousLocation)}
+					>
+						<section className="overflow-x-hidden">{children}</section>
+					</CSSTransition>
+				</SwitchTransition>
+			</main>
+		</>
+	);
+};
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+	console.error(error);
+	return (
+		<Document>
+			<Layout>
+				<div>
+					<h1>Oops! There was an error</h1>
+					<p>
+						{error.name} : {error.message}
+					</p>
+					<pre>{error.stack}</pre>
+					<hr />
+				</div>
+			</Layout>
+		</Document>
+	);
+}
+
+export const CatchBoundary = () => {
+	let caught = useCatch();
+
+	let message;
+	switch (caught.status) {
+		case 401:
+			message = <p>Oops! You don not have access to this page.</p>;
+			break;
+		case 404:
+			message = <p>Oops! This page does not exist.</p>;
+			break;
+
+		default:
+			throw new Error(caught.data || caught.statusText);
+	}
+
+	return (
+		<Document>
+			<Layout>
+				<h1>
+					{caught.status}: {caught.statusText}
+				</h1>
+				{message}
+			</Layout>
+		</Document>
 	);
 }

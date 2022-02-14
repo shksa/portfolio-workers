@@ -1,9 +1,7 @@
-import { Link, LoaderFunction, useLoaderData } from "remix";
+import { ErrorBoundaryComponent, Link, LoaderFunction, useLoaderData, json, useCatch } from "remix";
 import invariant from "tiny-invariant";
 import { Text } from "~/components/Text";
 import { getDatabase } from "~/lib/notion";
-
-// const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
 const isValidNotionDatabaseId = (databaseId: any): databaseId is string => {
 	return databaseId;
@@ -15,6 +13,7 @@ export const loader: LoaderFunction =
 			isValidNotionDatabaseId(NOTION_DATABASE_ID),
 			`NOTION_DATABASE_ID is not a string: ${NOTION_DATABASE_ID}`
 		);
+
 		const database = await getDatabase(NOTION_DATABASE_ID);
 
 		return database;
@@ -45,5 +44,45 @@ export default function Blog() {
 				))}
 			</ul>
 		</>
+	);
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+	console.error(error);
+	return (
+		<div>
+			<h1>Oops! There was an error in fetching the latest blog post list!</h1>
+			<p>
+				{error.name} : {error.message}
+			</p>
+			<pre>{error.stack}</pre>
+			<hr />
+		</div>
+	);
+}
+
+export const CatchBoundary = () => {
+	let caught = useCatch();
+
+	let message;
+	switch (caught.status) {
+		case 401:
+			message = <p>Oops! You don not have access to this page.</p>;
+			break;
+		case 404:
+			message = <p>Oops! This page does not exist.</p>;
+			break;
+
+		default:
+			throw new Error(caught.data || caught.statusText);
+	}
+
+	return (
+		<div>
+			<h1>
+				{caught.status}: {caught.statusText}
+			</h1>
+			{message}
+		</div>
 	);
 }
