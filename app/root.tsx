@@ -26,6 +26,15 @@ export const links: LinksFunction = () => {
 	return [
 		{ rel: "stylesheet", href: tailwindStyles },
 		{
+			rel: "stylesheet",
+			href: animationStyles,
+		},
+		{
+			rel: "icon",
+			type: "image/x-icon",
+			href: "/favicon.ico"
+		},
+		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Regular.woff2",
 			as: "font",
@@ -42,10 +51,6 @@ export const links: LinksFunction = () => {
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Medium.woff2",
 			as: "font",
 			type: "font/woff2",
-		},
-		{
-			rel: "stylesheet",
-			href: animationStyles,
 		},
 	];
 };
