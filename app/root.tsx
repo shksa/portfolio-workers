@@ -3,7 +3,6 @@ import {
 	LinksFunction,
 	LiveReload,
 	Meta,
-	Outlet,
 	Scripts,
 	ScrollRestoration,
 	useLocation,
@@ -39,18 +38,21 @@ export const links: LinksFunction = () => {
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Regular.woff2",
 			as: "font",
 			type: "font/woff2",
+			crossOrigin: "anonymous"
 		},
 		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Bold.woff2",
 			as: "font",
 			type: "font/woff2",
+			crossOrigin: "anonymous"
 		},
 		{
 			rel: "preload",
 			href: "/fonts/GTWalshiemPro/GTWalsheimPro-Medium.woff2",
 			as: "font",
 			type: "font/woff2",
+			crossOrigin: "anonymous"
 		},
 	];
 };
