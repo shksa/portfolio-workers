@@ -18,7 +18,7 @@ export const Text = ({ text }: { text: RichTextItemResponse[] }) => {
 						key={id}
 						className={classNames({
 							"font-bold": bold,
-							"font-mono bg-gray-100 px-1 py-[0.125rem] rounded-sm text-red-500": code,
+							"font-mono bg-gray-100 px-1 py-[0.125rem] rounded-sm text-red-500 first:break-all": code,
 							italic: italic,
 							"line-through": strikethrough,
 							underline: underline,

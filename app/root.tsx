@@ -76,17 +76,13 @@ function getFadeDirections(
 	) {
 		// happy path
 		return {
-			enter: "overflow-hidden",
-			enterActive: "animate__fadeInRight",
-			enterDone: "overflow-scroll",
-			exitActive: "animate__fadeOutLeft",
+			enterActive: "animate__animated animate__fadeInRight animate__faster",
+			exitActive: "animate__animated animate__fadeOutLeft animate__faster",
 		};
 	}
 	return {
-		enter: "overflow-hidden",
-		enterActive: "animate__fadeInLeft",
-		enterDone: "overflow-scroll",
-		exitActive: "animate__fadeOutRight",
+		enterActive: "animate__animated animate__fadeInLeft animate__faster",
+		exitActive: "animate__animated animate__fadeOutRight animate__faster",
 	};
 }
 
@@ -105,24 +101,22 @@ export default function App() {
 			</head>
 			<body className="px-4 container mx-auto lg:max-w-3xl">
 				<Header />
-				<SwitchTransition>
-					<CSSTransition
-						key={currentLocation.pathname}
-						addEndListener={(node, done) =>
-							node.addEventListener("animationend", done, false)
-						}
-						classNames={getFadeDirections(currentLocation, previousLocation)}
-					>
-						{/* The parent of animate__animated should have overflow-hidden while the animation 
-							is in progress to aboid seeing the scrollbars. Hence the use extra parent element.
-						*/}
-						<main className="prose md:prose-lg"> 
-							<div className="animate__animated animate__faster">
+				{/* overflow-hidden on body does not prevent scrollbars, it has to be a new element here, hence the main element */}
+				<main className="overflow-hidden">
+					<SwitchTransition>
+						<CSSTransition
+							key={currentLocation.pathname}
+							addEndListener={(node, done) => {
+								node.addEventListener("animationend", done, false);
+							}}
+							classNames={getFadeDirections(currentLocation, previousLocation)}
+						>
+							<section className="prose md:prose-lg overflow-x-hidden break-words">
 								{outlet}
-							</div>
-						</main>
-					</CSSTransition>
-				</SwitchTransition>
+							</section>
+						</CSSTransition>
+					</SwitchTransition>
+				</main>
 				<ScrollRestoration />
 				<Scripts />
 				{process.env.NODE_ENV === "development" && <LiveReload />}
