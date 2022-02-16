@@ -27,12 +27,12 @@ export const loader: LoaderFunction =
 		return database;
 	};
 
-export default function Blog() {
+export default function Index() {
 	const blogs = useLoaderData<NotionQueryDatabaseResponseResults | undefined>();
 
 	return (
-		<>
-			<h1 className="animate__animated animate__fadeInUp">Blogs</h1>
+		<section>
+			<h1 className="animate-fade-and-slide-in-from-bottom">Blogs</h1>
 			<ul>
 				{blogs?.map((blog) => (
 					<li key={blog.id}>
@@ -51,7 +51,7 @@ export default function Blog() {
 					</li>
 				))}
 			</ul>
-		</>
+		</section>
 	);
 }
 

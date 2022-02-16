@@ -2,11 +2,9 @@
 
 export default function Index() {
   return (
-    <>
-      <div className="overflow-hidden">
-        <h1 className="animate__animated animate__fadeInUp">Hi, I am Sreekar Nimbalkar</h1>
-      </div>
-      <p className="">I think, code and occasionally suffer a lot</p>
-    </>
+    <section>
+      <h1 className="animate-fade-and-slide-in-from-bottom">Hi, I am Sreekar Nimbalkar</h1>
+      <p>I think, code and occasionally suffer a lot</p>
+    </section>
   );
 }

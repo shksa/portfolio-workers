@@ -14,12 +14,8 @@ import {
 import type { MetaFunction } from "remix";
 import tailwindStyles from "./tailwind.css";
 import { Header } from "~/components/Header";
-import animationStyles from "animate.css";
-import { SwitchTransition, CSSTransition } from "react-transition-group";
-import { Location } from "history";
-import { usePrevious } from "./lib/hooks";
-import { CSSTransitionClassNames } from "react-transition-group/CSSTransition";
 import { ReactNode } from "react";
+import { Animate } from "~/components/Animate";
 
 export const meta: MetaFunction = () => {
 	return { title: "Sreekar Nimbalkar" };
@@ -28,10 +24,6 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => {
 	return [
 		{ rel: "stylesheet", href: tailwindStyles },
-		{
-			rel: "stylesheet",
-			href: animationStyles,
-		},
 		{
 			rel: "icon",
 			type: "image/x-icon",
@@ -60,35 +52,6 @@ export const links: LinksFunction = () => {
 		},
 	];
 };
-
-const routesFromLeftToRightInHeader = ["/", "/blog", "/about"];
-
-function getFadeDirections(
-	currentLocation: Location,
-	previousLocation: Location | undefined
-): CSSTransitionClassNames {
-	const idxOfCurrentRoute = routesFromLeftToRightInHeader.indexOf(
-		currentLocation.pathname
-	);
-	const idxOfPreviousRoute =
-		previousLocation &&
-		routesFromLeftToRightInHeader.indexOf(previousLocation.pathname);
-	if (
-		idxOfPreviousRoute === undefined ||
-		idxOfCurrentRoute > idxOfPreviousRoute ||
-		idxOfCurrentRoute === idxOfPreviousRoute
-	) {
-		// happy path
-		return {
-			enterActive: "animate__animated animate__fadeInRight animate__faster",
-			exitActive: "animate__animated animate__fadeOutLeft animate__faster",
-		};
-	}
-	return {
-		enterActive: "animate__animated animate__fadeInLeft animate__faster",
-		exitActive: "animate__animated animate__fadeOutRight animate__faster",
-	};
-}
 
 export default function App() {
 	const outlet = useOutlet();
@@ -123,24 +86,15 @@ const Document = ({ children }: { children: ReactNode }) => {
 
 const Layout = ({ children }: { children: ReactNode }) => {
 	const currentLocation = useLocation();
-	const previousLocation = usePrevious(currentLocation);
 	return (
 		<>
 			<Header />
 			{/* overflow-hidden on body does not prevent scrollbars, it has to be a new element here, hence the main element */}
 			{/* NOTE: Find out what happning here as overflow-hidden is also supposed to work on Y-axis */}
 			<main className="overflow-hidden prose md:prose-lg break-words">
-				<SwitchTransition>
-					<CSSTransition
-						key={currentLocation.pathname}
-						addEndListener={(node, done) => {
-							node.addEventListener("animationend", done, false);
-						}}
-						classNames={getFadeDirections(currentLocation, previousLocation)}
-					>
-						<section className="overflow-x-hidden">{children}</section>
-					</CSSTransition>
-				</SwitchTransition>
+				<Animate>
+					{children}
+				</Animate>
 			</main>
 		</>
 	);

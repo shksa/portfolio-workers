@@ -1,5 +1,11 @@
-import { ErrorBoundaryComponent, LoaderFunction, useCatch, useLoaderData } from "remix";
+import {
+	ErrorBoundaryComponent,
+	LoaderFunction,
+	useCatch,
+	useLoaderData,
+} from "remix";
 import invariant from "tiny-invariant";
+import { Animate } from "~/components/Animate";
 import { Block } from "~/components/Block";
 import { Text } from "~/components/Text";
 import { getBlocks, getPage } from "~/lib/notion";
@@ -8,26 +14,29 @@ const paramsHasValidSlugProp = (params: any): params is { slug: string } => {
 	return (params.slug?.length ?? 0) !== 0;
 };
 
-type BlogContentJSON = {
+type PostContentJSON = {
 	page: NotionPageObjectResponse;
 	blocks: NotionBlockObjectResponse[];
 };
 
 export const loader: LoaderFunction = async ({
 	params,
-}): Promise<BlogContentJSON> => {
+}): Promise<PostContentJSON> => {
 	invariant(
 		paramsHasValidSlugProp(params),
 		`expected a valid params.slug: ${params.slug}`
 	);
 	const id = params.slug;
 
-	const KV_Key = `blogContentResponse-${id}`
+	const KV_Key = `blogContentResponse-${id}`;
 
-	let blogContentResponse = await BLOG_POSTS.get<BlogContentJSON>(KV_Key, 'json')
+	let blogContentResponse = await BLOG_POSTS.get<PostContentJSON>(
+		KV_Key,
+		"json"
+	);
 
 	if (blogContentResponse) {
-		return blogContentResponse
+		return blogContentResponse;
 	}
 
 	const [page, blocks] = await Promise.all([getPage(id), getBlocks(id)]);
@@ -58,39 +67,42 @@ export const loader: LoaderFunction = async ({
 	});
 
 	blogContentResponse = {
-		page, blocks: blocksWithChildren
-	}
+		page,
+		blocks: blocksWithChildren,
+	};
 
-	await BLOG_POSTS.put(KV_Key, JSON.stringify(blogContentResponse))
+	await BLOG_POSTS.put(KV_Key, JSON.stringify(blogContentResponse));
 
 	return blogContentResponse;
 };
 
-export default function BlogPost() {
-	const data = useLoaderData<BlogContentJSON | undefined>();
+export default function Post() {
+	const data = useLoaderData<PostContentJSON | undefined>();
 
 	return (
-		<>
-			<h1 className="animate__animated animate__fadeInUp">
-				{data?.page && (
-					<Text
-						text={
-							(
-								data.page.properties.Name as Extract<
-									typeof data.page.properties.Name,
-									{ type: "title" }
-								>
-							).title
-						}
-					/>
-				)}
-			</h1>
-			<article>
-				{data?.blocks.map((block) => (
-					<Block key={block.id} block={block} />
-				))}
-			</article>
-		</>
+		<Animate>
+			<section>
+				<h1 className="animate-fade-and-slide-in-from-bottom">
+					{data?.page && (
+						<Text
+							text={
+								(
+									data.page.properties.Name as Extract<
+										typeof data.page.properties.Name,
+										{ type: "title" }
+									>
+								).title
+							}
+						/>
+					)}
+				</h1>
+				<article className="-ml-8">
+					{data?.blocks.map((block) => (
+						<Block key={block.id} block={block} />
+					))}
+				</article>
+			</section>
+		</Animate>
 	);
 }
 
@@ -106,7 +118,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 			<hr />
 		</div>
 	);
-}
+};
 
 export const CatchBoundary = () => {
 	let caught = useCatch();
@@ -132,4 +144,4 @@ export const CatchBoundary = () => {
 			{message}
 		</div>
 	);
-}
+};

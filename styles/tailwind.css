@@ -36,6 +36,10 @@
     @apply fixed;
     -webkit-backface-visibility: hidden;
   }
+
+  .animate-fade-and-slide-in-from-bottom {
+    @apply animate-in fade-in slide-in-from-bottom duration-1000;
+  }
 }
 
 
