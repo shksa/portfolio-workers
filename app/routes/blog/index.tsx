@@ -8,19 +8,27 @@ const isValidNotionDatabaseId = (databaseId: any): databaseId is string => {
 };
 
 export const loader: LoaderFunction =
-	async (): Promise<QueryDatabaseResponseResults> => {
+	async (): Promise<NotionQueryDatabaseResponseResults> => {
 		invariant(
 			isValidNotionDatabaseId(NOTION_DATABASE_ID),
 			`NOTION_DATABASE_ID is not a string: ${NOTION_DATABASE_ID}`
 		);
 
-		const database = await getDatabase(NOTION_DATABASE_ID);
+		let database = await BLOG_POSTS.get<NotionQueryDatabaseResponseResults>('database', 'json');
+
+		if (database) {
+			return database
+		}
+
+		database = await getDatabase(NOTION_DATABASE_ID);
+
+		await BLOG_POSTS.put('database', JSON.stringify(database))
 
 		return database;
 	};
 
 export default function Blog() {
-	const blogs = useLoaderData<QueryDatabaseResponseResults | undefined>();
+	const blogs = useLoaderData<NotionQueryDatabaseResponseResults | undefined>();
 
 	return (
 		<>

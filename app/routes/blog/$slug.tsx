@@ -8,19 +8,27 @@ const paramsHasValidSlugProp = (params: any): params is { slug: string } => {
 	return (params.slug?.length ?? 0) !== 0;
 };
 
-type BlogContentResponse = {
-	page: PageObjectResponse;
-	blocks: BlockObjectResponse[];
+type BlogContentJSON = {
+	page: NotionPageObjectResponse;
+	blocks: NotionBlockObjectResponse[];
 };
 
 export const loader: LoaderFunction = async ({
 	params,
-}): Promise<BlogContentResponse> => {
+}): Promise<BlogContentJSON> => {
 	invariant(
 		paramsHasValidSlugProp(params),
 		`expected a valid params.slug: ${params.slug}`
 	);
 	const id = params.slug;
+
+	const KV_Key = `blogContentResponse-${id}`
+
+	let blogContentResponse = await BLOG_POSTS.get<BlogContentJSON>(KV_Key, 'json')
+
+	if (blogContentResponse) {
+		return blogContentResponse
+	}
 
 	const [page, blocks] = await Promise.all([getPage(id), getBlocks(id)]);
 
@@ -49,14 +57,17 @@ export const loader: LoaderFunction = async ({
 		return block;
 	});
 
-	return {
-		page,
-		blocks: blocksWithChildren,
-	};
+	blogContentResponse = {
+		page, blocks: blocksWithChildren
+	}
+
+	await BLOG_POSTS.put(KV_Key, JSON.stringify(blogContentResponse))
+
+	return blogContentResponse;
 };
 
 export default function BlogPost() {
-	const data = useLoaderData<BlogContentResponse | undefined>();
+	const data = useLoaderData<BlogContentJSON | undefined>();
 
 	return (
 		<>

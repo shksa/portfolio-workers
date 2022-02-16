@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { Fragment } from "react";
 import { Link } from "remix";
 
-export const Text = ({ text }: { text: RichTextItemResponse[] }) => {
+export const Text = ({ text }: { text: NotionRichTextItemResponse[] }) => {
 	const textElements = text.map((richTextObj, id) => {
 		const {
 			annotations: { bold, code, color, italic, strikethrough, underline },

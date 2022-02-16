@@ -2,9 +2,13 @@ name = "portfolio"
 type = "javascript"
 
 zone_id = ""
-account_id = ""
+account_id = "9bdd0be4eab43e5e434e2321b340ff29"
 route = ""
 workers_dev = true
+
+kv_namespaces = [ 
+  { binding = "BLOG_POSTS", id = "214a716ed09f4c77b6d183df2c756997" }
+]
 
 [site]
 bucket = "./public"
