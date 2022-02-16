@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Text } from "./Text";
 
-export const Block = ({ block }: { block: BlockObjectResponse }) => {
+export const Block = ({ block }: { block: NotionBlockObjectResponse }) => {
 	const { type, id } = block;
 
 	let blockContent;

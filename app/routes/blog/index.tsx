@@ -36,7 +36,7 @@ export default function Blog() {
 			<ul>
 				{blogs?.map((blog) => (
 					<li key={blog.id}>
-						<Link to={blog.id}>
+						<Link prefetch="intent" to={blog.id}>
 							<Text
 								text={
 									(

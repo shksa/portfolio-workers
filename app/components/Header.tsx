@@ -1,9 +1,9 @@
-import { NavLink } from "remix";
+import { Link, NavLink } from "remix";
 import dpImgSrc from "../../public/images/dp_icon.jpg";
 
-const Link = ({ text, to }: { text: string; to: string }) => {
+const PageLink = ({ text, to }: { text: string; to: string }) => {
 	return (
-		<NavLink to={to}>
+		<NavLink prefetch="intent" to={to}>
 			{({ isActive }) => (
 				<span
 					className={
@@ -27,21 +27,21 @@ export const Header = () => {
 			>
 				<nav className="px-4 container mx-auto lg:max-w-3xl text-lg font-bold text-black">
 					<ol className="space-x-6 sm:space-x-8 md:space-x-12 lg:space-x-16 flex items-center">
-						<NavLink to="/" className="h-12 w-12">
+						<Link prefetch="intent" to="." className="h-12 w-12">
 							<img
 								alt="Sreekar Numbalkar"
 								src={dpImgSrc}
 								className="rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-blue-100"
 							></img>
-						</NavLink>
+						</Link>
 						<li>
-							<Link to="." text="Home" />
+							<PageLink to="." text="Home" />
 						</li>
 						<li>
-							<Link to="blog" text="Blog" />
+							<PageLink to="blog" text="Blog" />
 						</li>
 						<li>
-							<Link to="about" text="About" />
+							<PageLink to="about" text="About" />
 						</li>
 					</ol>
 				</nav>
