@@ -1,7 +1,5 @@
 import {
-	ErrorBoundaryComponent,
 	LoaderFunction,
-	useCatch,
 	useLoaderData,
 } from "remix";
 import invariant from "tiny-invariant";
@@ -9,6 +7,7 @@ import { Animate } from "~/components/Animate";
 import { Block } from "~/components/Block";
 import { Text } from "~/components/Text";
 import { getBlocks, getPage } from "~/lib/notion";
+export {ErrorBoundary, CatchBoundary} from '~/components/ErrorAndCatchBoundry'
 
 const paramsHasValidSlugProp = (params: any): params is { slug: string } => {
 	return (params.slug?.length ?? 0) !== 0;
@@ -106,42 +105,3 @@ export default function Post() {
 	);
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-	console.error(error);
-	return (
-		<div>
-			<h1>Oops! There was an error in fetching the blog post you wanted!</h1>
-			<p>
-				{error.name} : {error.message}
-			</p>
-			<pre>{error.stack}</pre>
-			<hr />
-		</div>
-	);
-};
-
-export const CatchBoundary = () => {
-	let caught = useCatch();
-
-	let message;
-	switch (caught.status) {
-		case 401:
-			message = <p>Oops! You don not have access to this page.</p>;
-			break;
-		case 404:
-			message = <p>Oops! This page does not exist.</p>;
-			break;
-
-		default:
-			throw new Error(caught.data || caught.statusText);
-	}
-
-	return (
-		<div>
-			<h1>
-				{caught.status}: {caught.statusText}
-			</h1>
-			{message}
-		</div>
-	);
-};

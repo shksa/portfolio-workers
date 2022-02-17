@@ -1,3 +1,5 @@
+export {ErrorBoundary, CatchBoundary} from '~/components/ErrorAndCatchBoundry'
+
 export default function About() {
   return (
     <section>

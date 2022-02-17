@@ -1,7 +1,8 @@
-import { ErrorBoundaryComponent, Link, LoaderFunction, useLoaderData, json, useCatch } from "remix";
+import { Link, LoaderFunction, useLoaderData } from "remix";
 import invariant from "tiny-invariant";
 import { Text } from "~/components/Text";
 import { getDatabase } from "~/lib/notion";
+export {ErrorBoundary, CatchBoundary} from '~/components/ErrorAndCatchBoundry'
 
 const isValidNotionDatabaseId = (databaseId: any): databaseId is string => {
 	return databaseId;
@@ -52,45 +53,5 @@ export default function Index() {
 				))}
 			</ul>
 		</section>
-	);
-}
-
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-	console.error(error);
-	return (
-		<div>
-			<h1>Oops! There was an error in fetching the latest blog post list!</h1>
-			<p>
-				{error.name} : {error.message}
-			</p>
-			<pre>{error.stack}</pre>
-			<hr />
-		</div>
-	);
-}
-
-export const CatchBoundary = () => {
-	let caught = useCatch();
-
-	let message;
-	switch (caught.status) {
-		case 401:
-			message = <p>Oops! You don not have access to this page.</p>;
-			break;
-		case 404:
-			message = <p>Oops! This page does not exist.</p>;
-			break;
-
-		default:
-			throw new Error(caught.data || caught.statusText);
-	}
-
-	return (
-		<div>
-			<h1>
-				{caught.status}: {caught.statusText}
-			</h1>
-			{message}
-		</div>
 	);
 }

@@ -5,17 +5,15 @@ import {
 	Meta,
 	Scripts,
 	ScrollRestoration,
-	useCatch,
-	useLocation,
 	useOutlet,
 	ErrorBoundaryComponent,
-
 } from "remix";
 import type { MetaFunction } from "remix";
 import tailwindStyles from "./tailwind.css";
 import { Header } from "~/components/Header";
 import { ReactNode } from "react";
 import { Animate } from "~/components/Animate";
+import {ErrorBoundary as _ErrorBoundary, CatchBoundary as _CatchBoundary} from '~/components/ErrorAndCatchBoundry'
 
 export const meta: MetaFunction = () => {
 	return { title: "Sreekar Nimbalkar" };
@@ -85,7 +83,6 @@ const Document = ({ children }: { children: ReactNode }) => {
 };
 
 const Layout = ({ children }: { children: ReactNode }) => {
-	const currentLocation = useLocation();
 	return (
 		<>
 			<Header />
@@ -101,46 +98,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
 };
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-	console.error(error);
 	return (
 		<Document>
 			<Layout>
-				<div>
-					<h1>Oops! There was an error</h1>
-					<p>
-						{error.name} : {error.message}
-					</p>
-					<pre>{error.stack}</pre>
-					<hr />
-				</div>
+				<_ErrorBoundary error={error} />
 			</Layout>
 		</Document>
 	);
 }
 
 export const CatchBoundary = () => {
-	let caught = useCatch();
-
-	let message;
-	switch (caught.status) {
-		case 401:
-			message = <p>Oops! You don not have access to this page.</p>;
-			break;
-		case 404:
-			message = <p>Oops! This page does not exist.</p>;
-			break;
-
-		default:
-			throw new Error(caught.data || caught.statusText);
-	}
-
 	return (
 		<Document>
 			<Layout>
-				<h1>
-					{caught.status}: {caught.statusText}
-				</h1>
-				{message}
+				<_CatchBoundary />
 			</Layout>
 		</Document>
 	);
