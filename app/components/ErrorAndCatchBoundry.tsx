@@ -3,14 +3,14 @@ import { Animate } from "./Animate";
 
 export const CatchBoundary = () => {
 	let caught = useCatch();
-
+	
 	let message;
 	switch (caught.status) {
 		case 401:
-			message = <p>Oops! You don not have access to this page.</p>;
+			message = "Oops! You don not have access to this page.";
 			break;
 		case 404:
-			message = <p>Oops! This page does not exist.</p>;
+			message = "Oops! This page does not exist.";
 			break;
 
 		default:
@@ -19,10 +19,10 @@ export const CatchBoundary = () => {
 
 	return (
 		<div>
-			<h1>
-				{caught.status}: {caught.statusText}
-			</h1>
-			{message}
+			<h1>{message}</h1>
+			<h3>
+				{caught.status}: {caught.data || caught.statusText}
+			</h3>
 		</div>
 	);
 };

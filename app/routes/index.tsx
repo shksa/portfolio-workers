@@ -1,4 +1,13 @@
+import { MetaFunction } from 'remix';
+import { siteTitle } from '~/lib/constants';
+
 export {ErrorBoundary, CatchBoundary} from '~/components/ErrorAndCatchBoundry'
+
+export let meta: MetaFunction = () => {
+	return {
+		title: siteTitle,
+	}
+}
 
 export default function Index() {
   return (

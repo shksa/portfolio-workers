@@ -14,5 +14,10 @@ declare global {
 	type NotionQueryDatabaseResponseResults = Array<
 		Extract<QueryDatabaseResponse['results'][number], {properties: Object}>
 	>
+	type KVBlogPostsIndex = {hash: string, content: NotionQueryDatabaseResponseResults}
+	type KVBlogPost = {hash: string, content: {
+		page: NotionPageObjectResponse;
+		blocks: NotionBlockObjectResponse[];
+	}}
 	const BLOG_POSTS: KVNamespace
 }

@@ -1,82 +1,45 @@
-import {
-	LoaderFunction,
-	useLoaderData,
-} from "remix";
+import { json, LoaderFunction, useLoaderData } from "remix";
 import invariant from "tiny-invariant";
 import { Animate } from "~/components/Animate";
 import { Block } from "~/components/Block";
 import { Text } from "~/components/Text";
-import { getBlocks, getPage } from "~/lib/notion";
-export {ErrorBoundary, CatchBoundary} from '~/components/ErrorAndCatchBoundry'
+import KV from "~/lib/kv";
+export {
+	ErrorBoundary,
+	CatchBoundary,
+} from "~/components/ErrorAndCatchBoundry";
 
 const paramsHasValidSlugProp = (params: any): params is { slug: string } => {
 	return (params.slug?.length ?? 0) !== 0;
 };
 
-type PostContentJSON = {
-	page: NotionPageObjectResponse;
-	blocks: NotionBlockObjectResponse[];
-};
-
-export const loader: LoaderFunction = async ({
-	params,
-}): Promise<PostContentJSON> => {
+export const loader: LoaderFunction = async ({ params, request }) => {
 	invariant(
 		paramsHasValidSlugProp(params),
 		`expected a valid params.slug: ${params.slug}`
 	);
-	const id = params.slug;
 
-	const KV_Key = `blogContentResponse-${id}`;
-
-	let blogContentResponse = await BLOG_POSTS.get<PostContentJSON>(
-		KV_Key,
-		"json"
-	);
-
-	if (blogContentResponse) {
-		return blogContentResponse;
+	let data = await KV.getBlogPost(params.slug)
+	if (data === null) {
+		throw new Response("Not Found", { status: 404 });
 	}
 
-	const [page, blocks] = await Promise.all([getPage(id), getBlocks(id)]);
+	const { hash, content } = data;
 
-	// Retrieve block children for nested blocks (one level deep), for example toggle blocks
-	// https://developers.notion.com/docs/working-with-page-content#reading-nested-blocks
-	const childBlocks = await Promise.all(
-		blocks
-			.filter((block) => block.has_children)
-			.map(async (block) => {
-				return {
-					id: block.id,
-					children: await getBlocks(block.id),
-				};
-			})
-	);
+	const etag = request.headers.get("If-None-Match");
+	if (etag === hash) {
+		return new Response(null, { status: 304 });
+	}
 
-	const blocksWithChildren = blocks.map((block) => {
-		// Add child blocks if the block should contain children but none exists
-		// @ts-ignore
-		if (block.has_children && !block[block.type].children) {
-			// @ts-ignore
-			block[block.type]["children"] = childBlocks.find(
-				(x) => x.id === block.id
-			)?.children;
-		}
-		return block;
+	return json(content, {
+		headers: {
+			etag: hash,
+		},
 	});
-
-	blogContentResponse = {
-		page,
-		blocks: blocksWithChildren,
-	};
-
-	await BLOG_POSTS.put(KV_Key, JSON.stringify(blogContentResponse));
-
-	return blogContentResponse;
 };
 
 export default function Post() {
-	const data = useLoaderData<PostContentJSON | undefined>();
+	const data = useLoaderData<KVBlogPost["content"] | undefined>();
 
 	return (
 		<Animate>
@@ -104,4 +67,3 @@ export default function Post() {
 		</Animate>
 	);
 }
-
