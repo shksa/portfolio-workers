@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 	return json(content, {
 		headers: {
-			etag: hash,
+			etag: `"${hash}"`,
 		},
 	});
 };
