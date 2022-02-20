@@ -27,13 +27,13 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 	const { hash, content } = data;
 
 	const etag = request.headers.get("If-None-Match");
-	if (etag === hash) {
+	if (etag === `W/"${hash}"`) {
 		return new Response(null, { status: 304 });
 	}
 
 	return json(content, {
 		headers: {
-			etag: `"${hash}"`,
+			Etag: `W/"${hash}"`,
 		},
 	});
 };
